@@ -1,0 +1,390 @@
+\documentclass[9pt]{extarticle}
+\usepackage{fontspec}
+\setmainfont{Leelawadee UI}
+\XeTeXlinebreaklocale "th_TH"
+\XeTeXlinebreakskip = 0pt plus 1pt minus 0.1pt
+\usepackage[a4paper,top=0.7cm,bottom=0.7cm,left=0.7cm,right=0.7cm]{geometry}
+\usepackage{multicol}
+\setlength{\columnsep}{0.45cm}
+\setlength{\columnseprule}{0.4pt}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.1em,itemsep=0pt,topsep=1pt}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{booktabs}
+\usepackage{array}
+
+\definecolor{navy}{RGB}{20,40,90}
+\definecolor{gold}{RGB}{190,140,20}
+\definecolor{lightbg}{RGB}{240,244,250}
+\definecolor{solbg}{RGB}{247,247,240}
+\definecolor{ideabg}{RGB}{236,246,238}
+\definecolor{ideafr}{RGB}{60,120,70}
+
+\titleformat{\section}{\normalfont\bfseries\normalsize\color{navy}}{\thesection}{0.4em}{}[{\color{gold}\titlerule[1pt]}]
+\titlespacing*{\section}{0pt}{4pt}{2pt}
+\titleformat{\subsection}{\normalfont\bfseries\color{gold}}{\thesubsection}{0.3em}{}
+\titlespacing*{\subsection}{0pt}{2pt}{0pt}
+
+\newtcolorbox{formulabox}{
+  colback=lightbg, colframe=navy!60, boxrule=0.4pt, breakable,
+  arc=1pt, left=3pt, right=3pt, top=1pt, bottom=1pt,
+  fontupper=\footnotesize
+}
+\newtcolorbox{solbox}{
+  colback=solbg, colframe=gold!70!black, boxrule=0.4pt, breakable,
+  arc=1pt, left=3pt, right=3pt, top=1.5pt, bottom=1.5pt,
+  fontupper=\footnotesize
+}
+\newtcolorbox{ideabox}{
+  colback=ideabg, colframe=ideafr, boxrule=0.4pt, breakable,
+  arc=1pt, left=3pt, right=3pt, top=1.5pt, bottom=1.5pt,
+  fontupper=\footnotesize
+}
+
+\newcommand{\dist}[1]{\subsection*{\textcolor{navy}{\textbullet\ #1}}}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5pt}
+
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\setlength{\abovedisplayshortskip}{1pt}
+\setlength{\belowdisplayshortskip}{1pt}
+
+\begin{document}
+\begin{center}
+{\Large\bfseries\color{navy} Chapter 1: ความฉลาดทางข้อมูลและความน่าจะเป็นเบื้องต้น}\\[1pt]
+{\normalsize\bfseries\color{gold!70!black} (Data Literacy and Introduction to Probability)}\\[2pt]
+{\small สรุปเนื้อหา — อ.ดร.ธนวรรณ ประฮาดไชย \quad Department of Statistics, Faculty of Science, KKU}
+\end{center}
+\vspace{2pt}
+{\color{gold}\hrule height 1.6pt}
+\vspace{3pt}
+\begin{center}
+{\bfseries\color{navy} Part 1: ความฉลาดรู้ทางข้อมูล และสถิติเบื้องต้น (Data Literacy)}
+\end{center}
+\vspace{2pt}
+
+\begin{multicols}{3}
+\raggedcolumns
+
+\section*{1. ความหมายของสถิติ}
+\textbf{สถิติ (Statistic)} หมายถึง ข้อมูลตัวเลข (numerical data) ที่เก็บรวบรวมไว้เพื่อจัดการ นำเสนอ วิเคราะห์ และตีความผลลัพธ์ โดยมีจุดมุ่งหมายแน่นอน เช่น ปริมาณน้ำฝนรายวัน ปริมาณสินค้าส่งออก
+
+\textbf{สถิติ (Statistics)} หมายถึง วิชาสถิติ เป็นศาสตร์ว่าด้วยทฤษฎีและวิธีการที่ใช้ศึกษาข้อเท็จจริงของสิ่งต่าง ๆ แบ่งเป็น 2 แขนง
+
+\begin{formulabox}
+\textbf{1) สถิติเชิงพรรณนา (Descriptive Statistics)} บรรยายให้เห็นภาพของข้อมูลทั้งหมด เช่น ค่ากลาง (ค่าเฉลี่ย มัธยฐาน ฐานนิยม) การนำเสนอด้วยตาราง/แผนภูมิ\\[2pt]
+\textbf{2) สถิติเชิงอนุมาน (Inferential Statistics)} เก็บข้อมูลบางส่วน (``ตัวอย่าง'') แล้วนำไปอธิบายคุณลักษณะของข้อมูลทั้งหมด (``ประชากร'') โดยอาศัยการประมาณค่า การทดสอบสมมติฐาน การวัดความสัมพันธ์ และการพยากรณ์
+\end{formulabox}
+
+\dist{ระเบียบวิธีการทางสถิติ (Method of Statistics)}
+\begin{enumerate}
+\item \textbf{การกำหนดปัญหา} — ระบุประเด็น วัตถุประสงค์ และตั้งสมมติฐานทางสถิติ
+\item \textbf{การรวบรวมข้อมูล} — กำหนดกลุ่มเป้าหมาย ออกแบบวิธีสุ่ม เลือกเครื่องมือ เก็บข้อมูลตามแผน
+\item \textbf{การประมวลผลและตรวจสอบข้อมูล} — ตรวจความครบถ้วน แก้ไขข้อมูลผิดปกติ
+\item \textbf{การนำเสนอข้อมูล} — ข้อความ (textual) ตาราง (tabular) กราฟ/แผนภูมิ (graphical)
+\item \textbf{การวิเคราะห์ข้อมูล} — ใช้สถิติพรรณนา/อนุมานตามความเหมาะสม
+\item \textbf{การแปลผลและสรุปผล} — ตีความ สรุปประเด็น ระบุข้อจำกัด
+\end{enumerate}
+\begin{ideabox}
+\textbf{แนวคิด:} 6 ขั้นตอนนี้เป็น\allowbreak โครงสร้างเดียวกับ\allowbreak ทุกงานวิจัยเชิงปริมาณ — สังเกตว่าขั้น (4) นำเสนอข้อมูล มาก่อนขั้น (5) วิเคราะห์ข้อมูลเสมอ เพราะต้อง\allowbreak จัดข้อมูลให้อยู่ในรูปที่ตรวจสอบได้ก่อนจึงวิเคราะห์ต่อ
+\end{ideabox}
+
+\section*{2. ความฉลาดรู้ทางข้อมูล (Data Literacy)}
+\textbf{Data Literacy} คือความสามารถในการอ่าน ทำความเข้าใจ วิเคราะห์ และสื่อสารข้อมูลในรูปแบบต่าง ๆ เพื่อประเมินข้อมูลและตัดสินใจอย่างมีวิจารณญาณ
+
+\begin{ideabox}
+\textbf{ทำไมต้องมี Data Literacy:} ตัวอย่างจากสไลด์ — สินค้ารีวิว ``4.9 จาก 5 คน'' กับ ``4.9 จาก 5{,}000 คน'' น่าเชื่อถือต่างกันมาก (ขนาดตัวอย่าง); ผลโพลสำรวจต้องดูว่า สำรวจจากกลุ่มตัวอย่างใด ครอบคลุมประชากรจริงหรือไม่ และมี margin of error เท่าไร — \textbf{ผลโพลไม่ได้บอกผลจริง แต่ช่วยให้เห็นแนวโน้ม} คนที่ขาด Data Literacy จึงตกเป็นเหยื่อข้อมูลบิดเบือนได้ง่าย เช่น กลลวงแก๊งคอลเซ็นเตอร์ที่อ้างเป็นเจ้าหน้าที่หน่วยงานต่าง ๆ โดยอาศัยข้อมูลส่วนตัวที่หลุดรั่วมาสร้างความน่าเชื่อถือ
+\end{ideabox}
+
+\dist{7 องค์ประกอบของ Data Literacy}
+\begin{enumerate}
+\item \textbf{ความเข้าใจเกี่ยวกับข้อมูล} — รู้คำศัพท์/หลักการพื้นฐาน เช่น ประเภทข้อมูล ตัวแปร วิธีวัดทางสถิติ
+\item \textbf{ทักษะวิเคราะห์ข้อมูล} — หาแนวโน้ม ความสัมพันธ์ แบบแผน ด้วยเทคนิคทางสถิติ
+\item \textbf{การอ่านและตีความข้อมูล} — สร้างความเข้าใจและตัดสินใจที่มีมูลค่า
+\item \textbf{การแสดงข้อมูล} — กราฟ แผนภูมิ แผนที่ข้อมูล ให้เข้าใจง่าย
+\item \textbf{การคิดวิเคราะห์แบบวิจารณ์} — ประเมินแหล่งข้อมูล คุณภาพข้อมูล และปัญหาที่อาจเกิดจากการใช้ข้อมูล
+\item \textbf{การมีส่วนร่วมทางจริยธรรม} — ความเป็นส่วนตัว ความปลอดภัย ความรับผิดชอบในการจัดการข้อมูล
+\item \textbf{การสื่อสาร} — ถ่ายทอดผลวิเคราะห์อย่างมีประสิทธิภาพ เช่น รายงาน งานนำเสนอ
+\end{enumerate}
+
+\dist{ประโยชน์ของ Data Literacy}
+\begin{itemize}
+\item \textbf{เพิ่มประสิทธิภาพการทำงาน} — นำทาง/เข้าใจข้อมูลได้เร็ว ลดข้อผิดพลาด
+\item \textbf{สื่อสารดีขึ้น} — เสนอผลลัพธ์และคำแนะนำได้อย่างมีประสิทธิภาพ
+\item \textbf{ความได้เปรียบในการแข่งขัน} — ใช้ข้อมูลสร้างนวัตกรรม วางแผนกลยุทธ์
+\item \textbf{จัดการความเสี่ยง} — ประเมินความเสี่ยงแม่นยำ ตัดสินใจบนพื้นฐานข้อมูล
+\item \textbf{เติบโตในอาชีพ} — วิเคราะห์/ตีความข้อมูลอย่างเป็นระบบ เพิ่มโอกาสก้าวหน้า
+\item \textbf{มีอำนาจตัดสินใจส่วนบุคคล} — ตัดสินใจโดยอาศัยหลักฐานเชิงข้อมูล
+\end{itemize}
+
+\begin{ideabox}
+\textbf{ตัวอย่างการประยุกต์:} ด้าน Cyber Security ใช้สถิติตรวจจับความผิดปกติ เช่น Intrusion Attempts, Malicious Code, Information Gathering — สไลด์ยกตัวอย่าง 7 ภัยคุกคามที่พบบ่อย: Malware, Phishing, SQL Injection, Password Attacks, Man-in-the-Middle, DDoS, XSS ซึ่งล้วนอาศัยการวิเคราะห์ข้อมูลตรวจจับความผิดปกติ — คือ Data Literacy + สถิติร่วมกัน
+\end{ideabox}
+
+\section*{3. ระดับการวัดข้อมูล (Scale of Measurement)}
+\begin{formulabox}
+\textbf{นามบัญญัติ (Nominal)} — จำแนก/เรียกชื่อประเภทเท่านั้น เช่น เพศ อาชีพ ระดับการศึกษา\\[2pt]
+\textbf{เรียงอันดับ (Ordinal)} — เรียงลำดับได้ (ดีกว่า/มากกว่า) แต่ระยะห่างไม่เท่ากัน เช่น ความนิยมผงซักฟอง 3 ระดับ (ดีที่สุด ดีมาก ดี)\\[2pt]
+\textbf{อันตรภาค (Interval)} — จำแนก+เรียงอันดับ+หน่วยวัดคงที่ (บวก/ลบได้) แต่\textbf{ไม่มีศูนย์แท้} เช่น อุณหภูมิ ระดับไอคิว\\[2pt]
+\textbf{อัตราส่วน (Ratio)} — เหมือนอันตรภาคทุกอย่าง และ\textbf{มีศูนย์แท้} (บวก ลบ คูณ หารได้สมบูรณ์) เช่น น้ำหนัก ส่วนสูง คะแนนสอบ รายได้
+\end{formulabox}
+
+\begin{center}\scriptsize
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+คุณสมบัติ & Nom. & Ord. & Int. & Ratio\\
+\midrule
+จำแนกความแตกต่าง & \checkmark & \checkmark & \checkmark & \checkmark\\
+เรียงอันดับ & & \checkmark & \checkmark & \checkmark\\
+บวก ลบ & & & \checkmark & \checkmark\\
+บวก ลบ คูณ หาร & & & & \checkmark\\
+มีศูนย์แท้ & & & & \checkmark\\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{ideabox}
+\textbf{แนวคิด:} คุณสมบัติแต่ละระดับ\allowbreak เป็น\textbf{ส่วนขยาย}ของระดับก่อนหน้า\allowbreak เสมอ (Ratio $\supset$ Interval $\supset$ Ordinal $\supset$ Nominal) จึงจำได้ง่ายโดยไล่จากซ้ายไปขวา: ยิ่งไปทางขวายิ่ง ``วัดได้ละเอียดขึ้น'' และทำคณิตศาสตร์กับมันได้มากขึ้น
+\end{ideabox}
+
+\textit{ตัวอย่างระดับการวัด:} น้ำหนัก(กก.)$\to$\textbf{Ratio}; ระดับความพึงพอใจ (มากที่สุด...น้อย)$\to$\textbf{Ordinal}; เพศ$\to$\textbf{Nominal}; อุณหภูมิ($^\circ$C)$\to$\textbf{Interval} (ศูนย์องศาไม่ใช่ ``ไม่มีความร้อนเลย''); รายได้ต่อเดือน(บาท)$\to$\textbf{Ratio}
+
+\section*{4. แหล่งที่มาและประเภทของข้อมูล}
+\dist{แหล่งที่มา}
+\textbf{ข้อมูลปฐมภูมิ (Primary)} — เก็บจากต้นตอโดยตรง เช่น สัมภาษณ์/แบบสอบถามนักศึกษาเรื่องค่าใช้จ่าย น้ำหนัก ส่วนสูง
+
+\textbf{ข้อมูลทุติยภูมิ (Secondary)} — มีผู้เก็บไว้แล้ว เช่น สถิติคนว่างงานจากกระทรวงมหาดไทย ปริมาณน้ำฝนจากกรมอุตุฯ จำนวนประชากรจากสำนักงานสถิติแห่งชาติ (ควรตรวจสอบคุณภาพก่อนใช้)
+
+\dist{ประเภทข้อมูล}
+\textbf{เชิงคุณภาพ (Qualitative)} — แม้เป็นตัวเลขก็ไม่มีความหมายทางคณิตศาสตร์ เช่น เบอร์โทรศัพท์ บ้านเลขที่ รหัสไปรษณีย์ ความพึงพอใจ เพศ
+
+\textbf{เชิงปริมาณ (Quantitative)} — รวบรวมได้ในรูปตัวเลขที่มีความหมาย เช่น จำนวนนักศึกษาปี 1, น้ำหนักทารกแรกเกิด, ปริมาณไฟฟ้าที่ใช้
+
+\section*{5. ประชากร ตัวอย่าง และการสุ่มตัวอย่าง}
+\textbf{ประชากร (Population)} คือกลุ่มทั้งหมดที่สนใจศึกษา \textbf{ตัวอย่าง (Sample)} คือส่วนหนึ่งที่สุ่มมาเป็นตัวแทนของประชากร \textbf{การสุ่มตัวอย่าง} คือการเลือกหน่วยตัวอย่างบางหน่วยจากประชากรทั้งหมด
+
+\dist{การสุ่มโดยใช้ความน่าจะเป็น (Probability Sampling)}
+ทุกหน่วยในประชากรมีโอกาสถูกเลือก\textbf{เท่ากัน} $\to$ ผลวิจัยแม่นยำ อ้างอิงถึงประชากรได้
+\begin{enumerate}
+\item \textbf{สุ่มอย่างง่าย (Simple Random)} — ทุกหน่วยมีโอกาสเท่ากัน ไม่ขึ้นกับการเลือกก่อนหน้า (จับสลาก/โปรแกรมสุ่ม) เหมาะกลุ่มตัวอย่างเล็ก
+\item \textbf{สุ่มอย่างมีระบบ (Systematic)} — สุ่มหน่วยแรก แล้วเลือกหน่วยถัดไปตามช่วงห่าง $k=N/n$ คงที่
+\item \textbf{สุ่มแบบชั้นภูมิ (Stratified)} — แบ่งประชากรเป็นชั้นภูมิ (Strata) ที่ภายในคล้ายกันมาก ระหว่างชั้นต่างกันมาก เช่น แบ่งตามชั้นปี
+\item \textbf{สุ่มแบบแบ่งกลุ่ม (Cluster)} — แบ่งเป็นกลุ่มย่อย (Cluster) ที่ภายในกลุ่มหลากหลาย ระหว่างกลุ่มคล้ายกัน แล้วสุ่มทั้งกลุ่ม เช่น สุ่มทั้ง ``คณะ''
+\end{enumerate}
+\begin{solbox}
+\textit{ตัวอย่าง (Systematic):} $N=12$, ต้องการ $n=4$ $\Rightarrow$ $k=N/n=12/4=3$ สุ่มเลขเริ่มต้นระหว่าง 1--3 แล้วเลือกหน่วยถัดไปทุกช่วง 3
+\end{solbox}
+\begin{ideabox}
+\textbf{แนวคิด: Stratified vs Cluster} ทั้งคู่แบ่งประชากรเป็นกลุ่มย่อยเหมือนกัน แต่\textbf{ตรงข้ามกัน}ในเชิงโครงสร้าง: Stratified ต้องการให้\textbf{แต่ละชั้นภูมิเป็นเนื้อเดียวกัน}ภายใน (สุ่มจาก\textit{ทุก}ชั้น) ส่วน Cluster ต้องการให้\textbf{แต่ละกลุ่มมีความหลากหลาย}ภายในจนเป็นตัวแทนประชากรได้ (สุ่มมาแค่\textit{บางกลุ่ม})
+\end{ideabox}
+
+\dist{การสุ่มโดยไม่ใช้ความน่าจะเป็น (Non-probability Sampling)}
+ใช้เมื่อไม่ทราบขนาดประชากร แต่ละหน่วยมีโอกาสถูกเลือก\textbf{ไม่เท่ากัน} $\to$ ความแม่นยำต่ำกว่า
+\begin{enumerate}
+\item \textbf{เจาะจง (Purposive)} — เลือกผู้มีคุณสมบัติเฉพาะตามวัตถุประสงค์ เช่น ผู้เชี่ยวชาญ
+\item \textbf{บังเอิญ (Accidental/Convenience)} — เลือกคนที่สะดวกพบเจอ ไม่วางแผนล่วงหน้า
+\item \textbf{โควตา (Quota)} — กำหนดสัดส่วนกลุ่มย่อยล่วงหน้าแล้วเลือกให้ครบโควตา (ไม่ได้สุ่มจริง) เช่น ชาย/หญิง 50/50
+\end{enumerate}
+
+\end{multicols}
+
+\vspace{4pt}
+{\color{gold}\hrule height 1.4pt}
+\vspace{3pt}
+\begin{center}
+{\bfseries\color{navy} Part 2: ความน่าจะเป็น (Probability)}
+\end{center}
+\vspace{2pt}
+
+\begin{multicols}{3}
+\raggedcolumns
+
+\section*{6. การทดลองเชิงสุ่ม (Random Experiment)}
+\textbf{การทดลองเชิงสุ่ม} คือกระบวนการที่ทำให้เกิดผลลัพธ์ซึ่งไม่อาจทำนายล่วงหน้าได้แน่นอน แต่ทราบว่าจะเกิดอะไรขึ้นได้บ้าง เช่น การโยนเหรียญ/ทอดลูกเต๋า 1 ครั้ง
+
+\textbf{ปริภูมิตัวอย่าง (Sample Space, $S$)} คือเซตของผลลัพธ์ที่เป็นไปได้ทั้งหมด สมาชิกแต่ละตัวเรียก ``จุดตัวอย่าง (Sample Point)''
+
+\textbf{เหตุการณ์ (Event)} คือเซตย่อยของ $S$
+
+\begin{solbox}
+\textit{ตัวอย่าง:} โยนเหรียญ 1 เหรียญ 3 ครั้ง สังเกตหน้าที่เกิดขึ้น\\
+$S=\{HHH,HHT,HTH,THH,HTT,THT,TTH,TTT\}$, $n(S)=2^3=8$
+\begin{itemize}
+\item $A=$ หัวทั้ง 3 ครั้ง $=\{HHH\}$ (เหตุการณ์เดี่ยว)
+\item $B=$ หัวอย่างน้อย 2 ครั้ง $=\{HHH,HHT,HTH,THH\}$ (เหตุการณ์ประกอบ)
+\item $C=$ หัว 3 ครั้งหรือน้อยกว่า $=S$ (เหตุการณ์เกิดขึ้นแน่นอน)
+\item $D=$ หัวมากกว่า 3 ครั้ง $=\{\,\}=\emptyset$ (เหตุการณ์ไม่เกิดขึ้นแน่นอน)
+\end{itemize}
+\end{solbox}
+
+\section*{7. เทคนิคการนับ (Counting Techniques)}
+ใช้นับจุดตัวอย่าง/ผลลัพธ์ เพื่อคำนวณความน่าจะเป็น โดยไม่ต้องเขียนจุดตัวอย่างทั้งหมด
+
+\dist{การคูณ (Multiplication Rule)}
+การทดลองมี $k$ ขั้นตอน ขั้นตอนที่ $i$ ทำได้ $n_i$ วิธี (แต่ละขั้นตอนทำ\textbf{ต่อเนื่องกัน})
+\begin{formulabox}
+$$\text{จำนวนวิธีทั้งหมด}=n_1\times n_2\times\cdots\times n_k$$
+\end{formulabox}
+\begin{solbox}
+\textit{ตัวอย่าง 1:} ตัวเลข 1,2,4,5,8,9 สร้างเลข 3 หลัก (ไม่ซ้ำ) ได้กี่จำนวน?\\
+หลักร้อย 6 วิธี $\times$ หลักสิบ 5 วิธี $\times$ หลักหน่วย 4 วิธี $=6{\times}5{\times}4=120$ จำนวน\\[3pt]
+\textit{ตัวอย่าง 2:} เลือกชุดกีฬา เสื้อ 3 สี, กางเกง 3 สี, รองเท้า 2 แบบ:\\
+$n_1{=}3,n_2{=}3,n_3{=}2\Rightarrow3{\times}3{\times}2=18$ วิธี
+\end{solbox}
+
+\dist{การบวก (Additive Rule)}
+การทดลองมี $k$ ทางเลือกที่เกิดพร้อมกัน\textbf{ไม่ได้} ทางเลือกที่ $i$ ทำได้ $n_i$ วิธี
+\begin{formulabox}
+$$\text{จำนวนวิธีทั้งหมด}=n_1+n_2+\cdots+n_k$$
+\end{formulabox}
+\begin{solbox}
+\textit{ตัวอย่าง 1:} ตัวเลข 0--5 สร้างเลขคู่ 3 หลัก ไม่ซ้ำหลัก:\\
+กรณีหลักหน่วย$=0$: $5{\times}4=20$ วิธี; กรณีหลักหน่วย$\in\{2,4\}$: $2{\times}4{\times}4=32$ วิธี\\
+รวม $=20+32=52$ วิธี\\[3pt]
+\textit{ตัวอย่าง 2:} หยิบไพ่ 1 ใบจาก 52 ใบ ได้โพดำหรือโพแดง: $n_1{=}13,n_2{=}13\Rightarrow13{+}13{=}26$ วิธี
+\end{solbox}
+\begin{ideabox}
+\textbf{แนวคิด: คูณ vs บวก} ตัวช่วยจำง่าย ๆ — ถ้าโจทย์ทำ\textbf{ทีละขั้นตอนต่อเนื่องกัน}จนครบ (ต้องเลือกเสื้อ \textit{และ} กางเกง \textit{และ} รองเท้า) ให้\textbf{คูณ} แต่ถ้าเป็น\textbf{ทางเลือกที่แยกกัน} เลือกได้ทางใดทางหนึ่ง (ได้โพดำ \textit{หรือ} โพแดง) ให้\textbf{บวก}
+\end{ideabox}
+
+\section*{8. การจัดลำดับ (Permutation)}
+การจัดเรียงสิ่งของโดย\textbf{คำนึงถึงลำดับ}
+\begin{formulabox}
+1) เรียง $n$ สิ่งต่างกันทั้งหมด แนวตรง: $n!=n(n{-}1)(n{-}2)\cdots1$\\
+2) เรียง $n$ สิ่งต่างกันทั้งหมด วงกลม: $(n-1)!$\\
+3) เรียง $r$ จาก $n$ สิ่ง แนวตรง: $\displaystyle{}^nP_r=\frac{n!}{(n-r)!}$\\
+4) เรียง $n$ สิ่งที่ซ้ำกันเป็นกลุ่ม $n_1,n_2,\dots,n_k$: $\displaystyle{}^nP_{n_1n_2\dots n_k}=\frac{n!}{n_1!n_2!\cdots n_k!}$
+\end{formulabox}
+\begin{solbox}
+\textit{(1) ตัวอย่าง:} จัดหัวหน้ากีฬาสี 5 คน เรียงแถว: $5!=5{\times}4{\times}3{\times}2{\times}1=120$ วิธี\\[3pt]
+\textit{(2) ตัวอย่าง:} นักเรียน 7 คน นั่งวงกลม: $(7-1)!=6!=720$ วิธี\\[3pt]
+\textit{(3) ตัวอย่าง:} นักวิ่ง 15 คน ชิงที่ 1,2,3: ${}^{15}P_3=\dfrac{15{\times}14{\times}13{\times}12!}{12!}=15{\times}14{\times}13=2{,}730$ วิธี\\
+ถ้ากำหนดให้นักวิ่งหมายเลข 5 ได้ที่ 1 แน่นอน (1 วิธี) เหลือจัดที่ 2,3 จาก 14 คนที่เหลือ: $1{\times}{}^{14}P_2=1{\times}14{\times}13=182$ วิธี\\[3pt]
+\textit{(4) ตัวอย่าง:} คำจาก STATISTICS (10 ตัวอักษร: S=3,T=3,A=1,I=2,C=1):\\
+$\dfrac{10!}{3!\,3!\,1!\,2!\,1!}=\dfrac{3{,}628{,}800}{6{\times}6{\times}1{\times}2{\times}1}=50{,}400$ คำ\\
+คำจาก STATISTIC (9 ตัวอักษร: S=2,T=3,A=1,I=2,C=1) ที่ขึ้นต้นด้วย S ลงท้ายด้วย C: ตรึง S,C ไว้หัว--ท้าย เหลือ 7 ตัวอักษรกลาง (S=1,T=3,A=1,I=2) จัดได้ $\dfrac{7!}{1!\,3!\,1!\,2!}=\dfrac{5{,}040}{12}=420$ คำ
+\end{solbox}
+
+\section*{9. การจัดหมู่ (Combination)}
+การจัดเรียงสิ่งของโดย\textbf{ไม่คำนึงถึงลำดับ}
+\begin{formulabox}
+$$\displaystyle{}^nC_r=\binom{n}{r}=\frac{n!}{r!(n-r)!}$$
+\end{formulabox}
+\begin{solbox}
+\textit{ตัวอย่าง 1:} เทนนิสเดี่ยว 10 คน แข่งพบกันหมด: $\binom{10}{2}=\dfrac{10!}{2!\,8!}=45$ ครั้ง\\[3pt]
+\textit{ตัวอย่าง 2:} เลือกซื้อหนังสืออย่างน้อย 3 เล่มจาก 6 เล่ม:\\
+$\binom{6}{3}{+}\binom{6}{4}{+}\binom{6}{5}{+}\binom{6}{6}=20{+}15{+}6{+}1=42$ วิธี\\[3pt]
+\textit{ตัวอย่าง 3:} เลือกผัก 3 ชนิดครบ 3 สี สีละ 1 ชนิด (เขียว 5, แดง 3, ม่วง 4 ชนิด):\\
+$\binom{5}{1}\binom{3}{1}\binom{4}{1}=5{\times}3{\times}4=60$ วิธี\\
+ถ้าเขียว--แดงอย่างละ 1 ชนิด ม่วง 2 ชนิด: $\binom{5}{1}\binom{3}{1}\binom{4}{2}=5{\times}3{\times}6=90$ วิธี
+\end{solbox}
+
+\section*{10. ความน่าจะเป็น (Probability)}
+ถ้าผลลัพธ์ทุกแบบใน $S$ มีโอกาสเกิด\textbf{เท่า ๆ กัน} (Equally likely) และเหตุการณ์ $A$ เกิดได้ $n(A)$ วิธี
+\begin{formulabox}
+$$P(A)=\frac{n(A)}{n(S)},\qquad 0\le P(A)\le1$$
+\end{formulabox}
+\begin{solbox}
+\textit{ตัวอย่าง:} ทอดลูกเต๋า 1 ลูก $S=\{1,\dots,6\}$, $n(S)=6$\\
+ก) แต้มคี่: $A=\{1,3,5\}\Rightarrow P(A)=3/6=0.5$\\
+ข) แต้มน้อยกว่า 3: $B=\{1,2\}\Rightarrow P(B)=2/6\approx0.33$\\[3pt]
+\textit{ตัวอย่าง (การจัดหมู่ร่วมกับความน่าจะเป็น):} กล่องมีลูกบอลดำ 3, แดง 4, เขียว 3 (รวม 10) สุ่ม 2 ลูกพร้อมกัน หาโอกาสได้ดำ 1 และแดง 1:\\
+$n(S)=\binom{10}{2}=45$, $n(A)=\binom31\binom41=12$\\
+$P(A)=12/45\approx0.267$
+\end{solbox}
+
+\dist{คุณสมบัติของความน่าจะเป็น}
+$0\le P(A)\le1$; $\ P(S)=1$; $\ P(\emptyset)=0$; $\ P(A')=1-P(A)$ (โดย $A'$ คือ complement ของ $A$ ใน $S$)
+
+\section*{11. กฎของความน่าจะเป็น (Probability Rules)}
+\dist{กฎเติมเต็ม (Complementation)}
+\begin{formulabox}
+$$P(A')=1-P(A)$$
+\end{formulabox}
+\begin{solbox}
+\textit{ตัวอย่าง:} ทอดลูกเต๋า หาโอกาส\textbf{ไม่ได้}แต้ม 3: $A=\{3\}\Rightarrow P(A)=1/6\Rightarrow P(A')=1-1/6=5/6$
+\end{solbox}
+
+\dist{กฎผลบวก (Addition Rule)}
+\begin{formulabox}
+กรณีทั่วไป: $P(A\cup B)=P(A)+P(B)-P(A\cap B)$\\
+ถ้า $A\cap B=\emptyset$ (mutually exclusive): $P(A\cup B)=P(A)+P(B)$
+\end{formulabox}
+\begin{solbox}
+\textit{ตัวอย่าง:} สุ่มตรวจสินค้าจาก 2 โรงงาน (ตาราง 2$\times$2, รวม 10 ชิ้น): เกรด A มี 5, จากโรงงาน B มี 6, เกรด A\textit{และ}จากโรงงาน B มี 3\\
+$P(A)=5/10,\ P(B)=6/10,\ P(A\cap B)=3/10$\\
+$P(A\cup B)=\dfrac{5}{10}+\dfrac{6}{10}-\dfrac{3}{10}=\dfrac{8}{10}=0.8$
+\end{solbox}
+
+\dist{ความน่าจะเป็นแบบมีเงื่อนไข (Conditional Probability)}
+\begin{formulabox}
+$$P(B\mid A)=\frac{P(A\cap B)}{P(A)},\qquad P(A)>0$$
+\end{formulabox}
+\begin{solbox}
+\textit{ตัวอย่าง:} ทอดลูกเต๋า หาโอกาสแต้ม$<3$ เมื่อรู้ว่าแต้มคี่ ($A=$คี่$=\{1,3,5\}$, $B=$น้อยกว่า 3$=\{1,2\}$, $A\cap B=\{1\}$)\\
+$P(A)=1/2,\ P(A\cap B)=1/6$\\
+$P(B\mid A)=\dfrac{1/6}{1/2}=1/3$
+\end{solbox}
+
+\dist{กฎการคูณความน่าจะเป็น (Multiplication Rule)}
+\begin{formulabox}
+$$P(A\cap B)=P(A)\,P(B\mid A)=P(B)\,P(A\mid B)$$
+\end{formulabox}
+\begin{ideabox}
+\textbf{แนวคิด:} กฎนี้คือการจัดรูปสมการของ Conditional Probability ใหม่ — ใช้เมื่อทราบ $P(A)$ และ $P(B\mid A)$ (เหตุการณ์ตามลำดับก่อนหลัง) แล้วต้องการหา $P(A\cap B)$
+\end{ideabox}
+
+\dist{กฎผลรวมความน่าจะเป็น (Total Probability Rule)}
+เมื่อ $A_1,A_2,\dots,A_n$ แบ่งแยกกัน (mutually exclusive) และครอบคลุม $S$ ทั้งหมด
+\begin{formulabox}
+$$P(B)=\sum_{i=1}^nP(B\mid A_i)\,P(A_i)$$
+\end{formulabox}
+\begin{solbox}
+\textit{ตัวอย่าง:} ผู้กักตัว COVID-19 มาจาก 3 ประเทศ: สหรัฐฯ 50\% (ติดเชื้อ 5\%), เกาหลีใต้ 40\% (ติดเชื้อ 2\%), จีน 10\% (ติดเชื้อ 3\%) หาโอกาสติดเชื้อทั้งหมด:\\
+$P(B)=(0.5)(0.05)+(0.4)(0.02)+(0.1)(0.03)$\\
+$=0.025+0.008+0.003=0.036$
+\end{solbox}
+
+\section*{12. เหตุการณ์อิสระ (Independence)}
+$A$ และ $B$ เป็นอิสระต่อกัน ก็ต่อเมื่อ $P(A\cap B)=P(A)\,P(B)$ (เทียบเท่ากับ $P(B\mid A)=P(B)$)
+\begin{solbox}
+\textit{ตัวอย่าง:} ทอดลูกเต๋า 2 ลูก $A=$แต้มรวม$=6=\{(1,5),(2,4),(3,3),(4,2),(5,1)\}$, $B=$หน้าเดียวกัน$=\{(1,1),\dots,(6,6)\}$\\
+$P(A)=5/36,\ P(B)=6/36,\ A\cap B=\{(3,3)\}\Rightarrow P(A\cap B)=1/36$\\
+เทียบ $P(A)P(B)=\dfrac{5}{36}{\times}\dfrac{6}{36}=\dfrac{30}{1296}\ne\dfrac{1}{36}=\dfrac{36}{1296}$\\
+$\therefore$ $A$ และ $B$ \textbf{ไม่เป็นอิสระต่อกัน}
+\end{solbox}
+
+\section*{13. ทฤษฎีของเบย์ (Bayes' Theorem)}
+\begin{ideabox}
+หมายเหตุจากสไลด์: หัวข้อนี้ระบุว่า \textbf{``ไม่สอน''} ในภาคเรียนนี้ — สรุปไว้เพื่อความครบถ้วนของเนื้อหาเท่านั้น ไม่ใช่ส่วนที่ใช้สอบ
+\end{ideabox}
+ใช้หาความน่าจะเป็นแบบมีเงื่อนไขแบบ ``ย้อนกลับ'' เมื่อทราบเหตุการณ์ผล ($B$) ต้องการหาว่ามาจากเหตุการณ์เหตุ ($A_i$) ใด โดยอาศัยกฎผลรวมความน่าจะเป็นเป็นตัวส่วน
+\begin{formulabox}
+$$P(A_i\mid B)=\frac{P(B\mid A_i)\,P(A_i)}{\sum_{j=1}^nP(B\mid A_j)\,P(A_j)}$$
+\end{formulabox}
+\begin{solbox}
+\textit{ตัวอย่าง 1:} โรงงาน A,B,C ผลิตสัดส่วน 50\%,30\%,20\% อัตราสินค้าเสีย 2\%,5\%,10\% ตามลำดับ สุ่มพบสินค้าเสีย หาโอกาสมาจากโรงงาน C:\\
+$P(B)=(.5)(.02){+}(.3)(.05){+}(.2)(.10)=.01{+}.015{+}.02=.045$\\
+$P(A_3\mid B)=\dfrac{.02}{.045}\approx0.444$\\[4pt]
+\textit{ตัวอย่าง 2:} $P(\text{กระดูกบาง})=0.03$; เครื่องมือให้ผล $+$ เมื่อกระดูกบางจริง 90\%, ให้ผล $+$ เมื่อกระดูกไม่บาง 2\% ถ้าผลตรวจเป็น $+$ หาโอกาสกระดูกบางจริง:\\
+$P(+)=(.03)(.9){+}(.97)(.02)=.027{+}.0194=.0464$\\
+$P(\text{บาง}\mid+)=\dfrac{.027}{.0464}\approx0.582$
+\end{solbox}
+
+\section*{สรุปภาพรวม}
+\begin{formulabox}
+\textbf{ลำดับการเลือกใช้เทคนิคการนับ:} มีลำดับ/ตำแหน่งสำคัญ $\to$ Permutation; ไม่สนลำดับ (เลือกเป็นกลุ่ม) $\to$ Combination; ทำต่อเนื่องหลายขั้นตอน $\to$ คูณ; เลือกทางใดทางหนึ่ง $\to$ บวก\\[3pt]
+\textbf{ลำดับการเลือกใช้กฎความน่าจะเป็น:} หา ``ไม่เกิด'' $\to$ เติมเต็ม; หา ``$A$ หรือ $B$'' $\to$ ผลบวก; หา ``$A$ และ $B$'' $\to$ การคูณ; รู้ผลแล้วอยากรู้เหตุ (ย้อนกลับ) $\to$ Total Probability / Bayes
+\end{formulabox}
+
+\end{multicols}
+\end{document}
