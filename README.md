@@ -1,22 +1,22 @@
-# สรุปเนื้อหาวิชาสถิติ (Statistics Chapter Summaries)
+# Statistics Chapter Summaries
 
-สรุปเนื้อหาแต่ละบท พร้อมตัวอย่างโจทย์ แนวคิด และวิธีแก้แบบละเอียด จัดทำจากสไลด์ประกอบการสอน — เน้นแนวคิดและตรรกะการเลือกใช้สถิติทดสอบแต่ละแบบ
+Chapter-by-chapter summaries with example problems, concepts, and detailed solutions, prepared from the course slides — focused on the concepts and logic behind choosing each statistical test.
 
-> หมายเหตุ: ไฟล์สไลด์/เอกสารต้นฉบับของผู้สอนไม่ได้รวมอยู่ใน repository นี้ (เก็บไว้ในเครื่องส่วนตัวเท่านั้น) — ที่นี่มีเฉพาะไฟล์สรุปที่จัดทำขึ้นเอง (`.tex` + `.pdf`)
+> Note: the instructor's original slides/materials are not included in this repository (kept locally only) — this repo contains only the self-prepared summary files (`.tex` + `.pdf`).
 
-## เนื้อหา
+## Contents
 
-| บท | เรื่อง | ไฟล์ |
+| Chapter | Topic | File |
 |---|---|---|
-| Chapter 1 | Data Literacy และความน่าจะเป็นและสถิติเบื้องต้น | [`CH1-Data_Literacy_ความน่าจะเป็นและสถิติ/CH1_summary.pdf`](CH1-Data_Literacy_ความน่าจะเป็นและสถิติ/CH1_summary.pdf) |
-| Chapter 2 | ตัวแปรสุ่ม และการแจกแจงความน่าจะเป็น | [`CH2-ตัวแปรสุ่มและการแจกแจงความน่าจะเป็น/CH2_summary.pdf`](CH2-ตัวแปรสุ่มและการแจกแจงความน่าจะเป็น/CH2_summary.pdf) |
-| Chapter 3 | การแจกแจงของตัวสถิติ | [`CH3-การแจกแจงของตัวสถิติ/CH3_summary.pdf`](CH3-การแจกแจงของตัวสถิติ/CH3_summary.pdf) |
-| Chapter 4 | การประมาณค่า | [`CH4-การประมาณค่า/CH4_summary.pdf`](CH4-การประมาณค่า/CH4_summary.pdf) |
-| Chapter 5 (Part 1) | การทดสอบสมมติฐาน | [`CH5-การทดสอบสมมติฐาน_ANOVA_ไคสแควร์/CH5_summary.pdf`](CH5-การทดสอบสมมติฐาน_ANOVA_ไคสแควร์/CH5_summary.pdf) |
-| Chapter 5 (Part 2) | การวิเคราะห์ความแปรปรวน (ANOVA) และการทดสอบไคกำลังสอง | [`CH5-การทดสอบสมมติฐาน_ANOVA_ไคสแควร์/CH5_Part2_summary.pdf`](CH5-การทดสอบสมมติฐาน_ANOVA_ไคสแควร์/CH5_Part2_summary.pdf) |
+| Chapter 1 | Data Literacy and an introduction to probability and statistics | [`CH1-Data_Literacy_ความน่าจะเป็นและสถิติ/CH1_summary.pdf`](CH1-Data_Literacy_ความน่าจะเป็นและสถิติ/CH1_summary.pdf) |
+| Chapter 2 | Random variables and probability distributions | [`CH2-ตัวแปรสุ่มและการแจกแจงความน่าจะเป็น/CH2_summary.pdf`](CH2-ตัวแปรสุ่มและการแจกแจงความน่าจะเป็น/CH2_summary.pdf) |
+| Chapter 3 | Sampling distributions | [`CH3-การแจกแจงของตัวสถิติ/CH3_summary.pdf`](CH3-การแจกแจงของตัวสถิติ/CH3_summary.pdf) |
+| Chapter 4 | Estimation | [`CH4-การประมาณค่า/CH4_summary.pdf`](CH4-การประมาณค่า/CH4_summary.pdf) |
+| Chapter 5 (Part 1) | Hypothesis testing | [`CH5-การทดสอบสมมติฐาน_ANOVA_ไคสแควร์/CH5_summary.pdf`](CH5-การทดสอบสมมติฐาน_ANOVA_ไคสแควร์/CH5_summary.pdf) |
+| Chapter 5 (Part 2) | Analysis of Variance (ANOVA) and the Chi-squared test | [`CH5-การทดสอบสมมติฐาน_ANOVA_ไคสแควร์/CH5_Part2_summary.pdf`](CH5-การทดสอบสมมติฐาน_ANOVA_ไคสแควร์/CH5_Part2_summary.pdf) |
 
-แต่ละไฟล์สรุปมีไฟล์ต้นฉบับ LaTeX (`.tex`) อยู่ในโฟลเดอร์เดียวกัน คอมไพล์ด้วย `xelatex` (ใช้ฟอนต์ Leelawadee UI)
+Each summary file has its LaTeX source (`.tex`) in the same folder, compiled with `xelatex` (using the Leelawadee UI font).
 
-## รูปแบบการสรุป
+## Summary format
 
-ทุกบทใช้โครงสร้างเดียวกัน: **เนื้อหา → โจทย์จากชีท → แนวคิด → วิธีแก้** โดยมีตัวอย่างที่คำนวณแบบเต็มขั้นตอนพร้อม Output จาก SPSS/Excel ประกอบ
+Every chapter follows the same structure: content → problems from the worksheet → approach → solution, with examples worked through in full detail alongside SPSS/Excel output.
