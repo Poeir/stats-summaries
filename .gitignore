@@ -1,18 +1,12 @@
-# Original lecture materials (instructor's copyrighted slides) — kept locally only
-*.pptx
-CH1/
-CH4/CH4-การประมาณค่า.pdf
-CH5/CH5-การทดสอบสมมติฐาน.pdf
-CH5/CH5_unlocked.pdf
+# Whitelist approach: ignore everything except our own summary files,
+# so renaming/reorganizing chapter folders can never accidentally leak
+# the instructor's original lecture pptx/pdf into the repo.
+*
+!*/
+!*_summary.tex
+!*_summary.pdf
+!.gitignore
+!README.md
 
-# Unrelated course notes, not part of this repo
+# Never track these even if a name above would match
 UXUI/
-
-# LaTeX build artifacts
-*.aux
-*.log
-*.out
-*.toc
-*.synctex.gz
-*.fls
-*.fdb_latexmk
