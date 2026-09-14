@@ -1,0 +1,576 @@
+\documentclass[10pt]{extarticle}
+\usepackage{fontspec}
+\setmainfont{Leelawadee UI}
+\XeTeXlinebreaklocale "th_TH"
+\XeTeXlinebreakskip = 0pt plus 1pt minus 0.1pt
+\usepackage[a4paper,top=1.3cm,bottom=1.5cm,left=1.4cm,right=1.4cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.3em,itemsep=1pt,topsep=2pt}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{multirow}
+
+\definecolor{navy}{RGB}{20,40,90}
+\definecolor{gold}{RGB}{190,140,20}
+\definecolor{lightbg}{RGB}{240,244,250}
+\definecolor{solbg}{RGB}{247,247,240}
+\definecolor{ideabg}{RGB}{236,246,238}
+\definecolor{ideafr}{RGB}{60,120,70}
+\definecolor{compbg}{RGB}{236,247,247}
+\definecolor{compfr}{RGB}{20,120,120}
+\definecolor{qbg}{RGB}{245,240,250}
+\definecolor{qfr}{RGB}{90,60,140}
+
+\titleformat{\section}{\normalfont\bfseries\Large\color{navy}}{\thesection}{0.5em}{}[{\color{gold}\titlerule[1.2pt]}]
+\titlespacing*{\section}{0pt}{10pt}{5pt}
+\titleformat{\subsection}{\normalfont\bfseries\large\color{gold!70!black}}{\thesubsection}{0.4em}{}
+\titlespacing*{\subsection}{0pt}{7pt}{3pt}
+\titleformat{\subsubsection}{\normalfont\bfseries\color{navy}}{\thesubsubsection}{0.4em}{}
+\titlespacing*{\subsubsection}{0pt}{5pt}{2pt}
+
+\newtcolorbox{formulabox}{
+  colback=lightbg, colframe=navy!60, boxrule=0.4pt, breakable,
+  arc=1pt, left=4pt, right=4pt, top=3pt, bottom=3pt,
+}
+\newtcolorbox{solbox}{
+  colback=solbg, colframe=gold!70!black, boxrule=0.4pt, breakable,
+  arc=1pt, left=4pt, right=4pt, top=3pt, bottom=3pt,
+}
+\newtcolorbox{ideabox}{
+  colback=ideabg, colframe=ideafr, boxrule=0.4pt, breakable,
+  arc=1pt, left=4pt, right=4pt, top=3pt, bottom=3pt,
+}
+\newtcolorbox{outbox}{
+  colback=compbg, colframe=compfr, boxrule=0.4pt, breakable,
+  arc=1pt, left=4pt, right=4pt, top=3pt, bottom=3pt,
+}
+\newtcolorbox{qbox}{
+  colback=qbg, colframe=qfr, boxrule=0.5pt, breakable,
+  arc=1pt, left=4pt, right=4pt, top=3pt, bottom=3pt,
+  fonttitle=\bfseries\color{white}, colbacktitle=qfr, title={โจทย์ (ต้นฉบับ)}
+}
+\newtcolorbox{stepbox}[1]{
+  colback=white, colframe=navy, boxrule=0.6pt, breakable,
+  arc=1pt, left=5pt, right=5pt, top=3pt, bottom=4pt,
+  fonttitle=\bfseries\color{white}, colbacktitle=navy, title={#1}
+}
+
+\newcommand{\dist}[1]{\subsection*{\textcolor{navy}{\textbullet\ #1}}}
+\newcommand{\case}[1]{\textbf{\textcolor{gold!70!black}{#1}}}
+\newcommand{\concept}[1]{\par\vspace{2pt}\noindent{\footnotesize\textbf{\textcolor{ideafr}{\ding{228}\ แนวคิด:}} #1}\vspace{2pt}\par}
+\newcommand{\ding}[1]{$\blacktriangleright$}
+\newcommand{\spssout}[1]{\vspace{2pt}\noindent{\small\textbf{\textcolor{compfr}{Output -- SPSS: #1}}}\par\vspace{1pt}}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1pt}
+\renewcommand{\arraystretch}{1.2}
+
+\pgfmathdeclarefunction{gauss}{3}{%
+  \pgfmathparse{1/(#3*sqrt(2*pi))*exp(-((#1-#2)^2)/(2*#3^2))}%
+}
+
+\begin{document}
+\begin{center}
+{\LARGE\bfseries\color{navy} Chapter 5: การทดสอบสมมติฐาน (Hypothesis Testing)}\\[3pt]
+{\normalsize สรุปเนื้อหา (Part 1) พร้อมตัวอย่างและ Output SPSS ฉบับเต็ม — อ.ดร.ธนวรรณ ประฮาดไชย \quad Department of Statistics, Faculty of Science, KKU}
+\end{center}
+\vspace{3pt}
+{\color{gold}\hrule height 1.6pt}
+\vspace{6pt}
+
+\section{แนวคิดพื้นฐานของการทดสอบสมมติฐาน}
+
+\textbf{สมมติฐาน (Hypothesis)} คือข้อสมมติเกี่ยวกับค่าพารามิเตอร์ ที่ตั้งขึ้นโดยอาศัยข้อมูลที่มีหรือคาดการณ์สิ่งที่จะเกิดขึ้น ซึ่งข้อสมมติดังกล่าวอาจเป็นจริงหรือไม่ก็ได้
+
+\textbf{ทำไมต้องทดสอบสมมติฐาน:} เป็นการทดสอบเพื่อให้ได้ข้อสรุป สำหรับตัดสินใจที่จะยอมรับหรือปฏิเสธสมมติฐานที่ตั้งขึ้น โดยอาศัยตัวสถิติเป็นเกณฑ์ในการตัดสินใจ
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\rowcolor{lightbg}\textbf{สมมติฐานหลัก (Null hypothesis)} & \textbf{สมมติฐานรอง (Alternative hypothesis)}\\
+เขียนแทนด้วย $H_0$ & เขียนแทนด้วย $H_1$\\
+เป็นสมมติฐานที่ต้องการทดสอบว่าเป็นจริงหรือไม่ & เป็นสมมติฐานที่แย้งกับสมมติฐานหลัก\\
+\end{tabular}
+\end{center}
+
+\dist{ประเภทของความผิดพลาด}
+เนื่องจากการตัดสินใจที่จะยอมรับหรือปฏิเสธ $H_0$ จะขึ้นอยู่กับข้อมูลที่ได้จากตัวอย่างสุ่ม ซึ่งมีความไม่แน่นอน จึงมีโอกาสเกิดความผิดพลาดในการตัดสินใจได้ ดังตาราง
+
+\begin{center}
+\small
+\begin{tabular}{l|cc}
+\rowcolor{lightbg} & $H_0$ เป็นจริง & $H_0$ ไม่เป็นจริง\\\hline
+ปฏิเสธ $H_0$ & ความผิดพลาดแบบที่ 1 $(\alpha)$ & ตัดสินใจถูกต้อง $(1-\beta)$\\
+ยอมรับ $H_0$ & ตัดสินใจถูกต้อง $(1-\alpha)$ & ความผิดพลาดแบบที่ 2 $(\beta)$\\
+\end{tabular}
+\end{center}
+
+\textbf{ความผิดพลาดแบบที่ 1 (Type I Error): $\alpha$} คือ การปฏิเสธสมมติฐานหลัก ($H_0$) ทั้ง ๆ ที่จริงแล้ว $H_0$ เป็นจริง เปรียบเสมือน ``ตัดสินว่าผิด ทั้งที่คน ๆ นั้นบริสุทธิ์''
+$$\alpha=P(\text{ปฏิเสธ }H_0\mid H_0\text{ เป็นจริง})$$
+
+\textbf{ความผิดพลาดแบบที่ 2 (Type II Error): $\beta$} คือ การยอมรับหรือไม่ปฏิเสธสมมติฐานหลัก ($H_0$) ทั้ง ๆ ที่จริงแล้ว $H_0$ เป็นเท็จ เปรียบเสมือน ``ปล่อยให้คนผิดหลุดพ้นไป''
+$$\beta=P(\text{ไม่ปฏิเสธ }H_0\mid H_0\text{ เป็นเท็จ})$$
+
+\begin{ideabox}
+\textbf{ตัวอย่าง:} สมมติว่า $H_0$: ``ยานี้ไม่ช่วยรักษาโรค''\\
+$\to$ ถ้าเราปฏิเสธ $H_0$ และบอกว่ายานี้ช่วยรักษาโรคได้ ทั้ง ๆ ที่จริงแล้วมันไม่ช่วย $\Rightarrow$ เกิด Type I Error $\therefore$ การรักษาไม่เกิดประโยชน์ที่แท้จริง\\
+$\to$ ในความเป็นจริง ยานี้ช่วยรักษาโรค แต่ผลการทดสอบทำให้เรายอมรับ $H_0$ $\Rightarrow$ เกิด Type II Error $\therefore$ เราพลาดโอกาสใช้ยาที่ดี\\[3pt]
+\textbf{ความสำคัญขึ้นอยู่กับบริบทของปัญหา:} ถ้าเรื่องเกี่ยวกับความปลอดภัยของชีวิต เช่น การอนุมัติวัคซีน $\to$ Type I Error อาจร้ายแรงกว่า เพราะอาจอนุมัติสิ่งที่อันตราย; ถ้าเรื่องเกี่ยวกับการวินิจฉัยโรค เช่น ตรวจหาโรคร้ายแรง $\to$ Type II Error อาจร้ายแรงกว่า เพราะอาจพลาดโอกาสในการรักษา
+\end{ideabox}
+
+\dist{การตั้งสมมติฐาน 3 ลักษณะ}
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\rowcolor{lightbg}แบบที่ 1 (ทางเดียว-ซ้าย) & แบบที่ 2 (ทางเดียว-ขวา) & แบบที่ 3 (สองทาง)\\
+$H_0:\theta=\theta_0$ & $H_0:\theta=\theta_0$ & $H_0:\theta=\theta_0$\\
+$H_1:\theta<\theta_0$ & $H_1:\theta>\theta_0$ & $H_1:\theta\ne\theta_0$\\
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[width=6cm,height=2.6cm,axis lines=left,ymin=0,ymax=0.45,
+  xtick={-1.96,0,1.96},xticklabels={,,},tick label style={font=\tiny},
+  label style={font=\tiny},axis line style={-latex,thin}]
+\addplot[domain=-3.4:3.4,samples=80,navy,thick] {gauss(x,0,1)};
+\addplot[domain=-3.4:-1.96,samples=30,fill=gold!55,draw=none] {gauss(x,0,1)} \closedcycle;
+\addplot[domain=1.96:3.4,samples=30,fill=gold!55,draw=none] {gauss(x,0,1)} \closedcycle;
+\end{axis}
+\end{tikzpicture}\\
+{\footnotesize การทดสอบแบบสองทาง (Two-tailed test): บริเวณปฏิเสธ $H_0$ (แรเงา) อยู่ 2 หาง อย่างละ $\alpha/2$ ส่วนการทดสอบแบบทางเดียว (One-tailed test) บริเวณปฏิเสธ $H_0$ อยู่หางเดียว}
+\end{center}
+
+\dist{5 ขั้นตอนในการทดสอบสมมติฐาน}
+\begin{enumerate}
+\item \textbf{กำหนดสมมติฐาน} ($H_0$, $H_1$)
+\item \textbf{กำหนดระดับนัยสำคัญ} ($\alpha$) โดยทั่วไปนิยมกำหนดที่ $\alpha=0.05$ ซึ่งคือความคลาดเคลื่อนชนิดที่ 1 หรือความน่าจะเป็นในการตัดสินใจที่จะปฏิเสธ $H_0$ เมื่อ $H_0$ เป็นจริง
+\item \textbf{พิจารณาเลือกตัวสถิติทดสอบ} ให้สอดคล้องกับ (1) การตั้งสมมติฐานในข้อที่ 1 และ (2) ผลการทดสอบข้อตกลงเบื้องต้น (ถ้ามี)
+\item \textbf{คำนวณค่าสถิติและหาค่า p-value} คือค่านัยสำคัญน้อยที่สุดที่ทำให้ปฏิเสธ $H_0$ หรือค่าความน่าจะเป็นที่จะปฏิเสธ $H_0$ เมื่อ $H_0$ เป็นจริง
+\item \textbf{ทำการตัดสินใจ และสรุปผลการทดสอบ} โดยพิจารณาค่า p-value (หรือค่า Sig. ในโปรแกรมทางสถิติ เช่น SPSS, Excel) เปรียบเทียบกับระดับนัยสำคัญ ($\alpha$) ที่กำหนดไว้
+\end{enumerate}
+
+\begin{formulabox}
+\textbf{เกณฑ์ตัดสินใจ:} ปฏิเสธ $H_0$ ถ้า
+$$p\text{-value}\le\alpha$$
+\textit{หมายเหตุ:} โปรแกรม (SPSS/Excel) มักรายงาน p-value แบบสองทางเสมอ ถ้าทดสอบแบบทางเดียว ต้องนำ p-value แบบสองทางมาหารครึ่งก่อน แล้วจึงนำไปเทียบกับ $\alpha$ เพื่อพิจารณาเฉพาะด้านเดียวที่สนใจ
+\end{formulabox}
+
+\dist{ข้อสมมติเบื้องต้น (Assumption) ที่ต้องตรวจก่อนทุกครั้ง}
+ตัวอย่างสุ่มมาจากประชากรที่\textbf{มีการแจกแจงปกติ} ทดสอบด้วยสถิติ Kolmogorov--Smirnov (เมื่อ $n>50$) หรือ Shapiro--Wilk (เมื่อ $n\le50$)
+$$H_0:\text{ข้อมูลมีการแจกแจงแบบปกติ}\qquad H_1:\text{ข้อมูลไม่มีการแจกแจงแบบปกติ}$$
+คำสั่งใน SPSS: \texttt{Analyze > Descriptive Statistics > Explore...}
+
+\section{ตัวอย่างกรณีศึกษา (ใช้ตลอดบทนี้)}
+
+\begin{qbox}
+\textbf{งานวิจัยเรื่อง:} ผลกระทบจากการแพร่ระบาดของโรคโควิด-19 (Covid-19) ต่อความเครียดของนักศึกษาระดับปริญญาตรี
+
+\textbf{ประชากร:} นักศึกษาระดับปริญญาตรี ที่ลงทะเบียนในรายวิชาด้านการดูแลสุขภาพส่วนบุคคล มหาวิทยาลัยแห่งหนึ่งในรัฐนิวเจอร์ซี่ ประเทศสหรัฐอเมริกา (ข้อมูล ณ เดือนเมษายน 2563)
+
+\textbf{ตัวอย่าง:} นักศึกษาระดับปริญญาตรี ที่ลงทะเบียนในรายวิชาด้านการดูแลสุขภาพส่วนบุคคล มหาวิทยาลัยแห่งหนึ่งในรัฐนิวเจอร์ซี่ ประเทศสหรัฐอเมริกา
+
+\textbf{การเก็บข้อมูล:} ส่งแบบสอบถามทางอีเมล
+
+\textbf{ขนาดตัวอย่าง:} 150 คน
+
+\textbf{เครื่องมือที่ใช้ในการเก็บรวบรวมข้อมูล:} แบบสอบถาม
+
+\textbf{เกณฑ์ประเมินความเครียด:} นักศึกษาจะถูกประเมินว่ามีความเครียด เมื่อคะแนนความเครียด $\ge 20$ คะแนน
+\end{qbox}
+
+\section{ตัวอย่างที่ 1: การทดสอบสมมติฐานของค่าเฉลี่ยของ 1 ประชากร ($\mu$)}
+
+\begin{qbox}
+อยากทราบว่า นักศึกษามีคะแนนความเครียดเฉลี่ย แตกต่างไปจากรายงานความเครียดของนักศึกษา มหาวิทยาลัย A หรือไม่?? จากการศึกษาความเครียดในกลุ่มนักศึกษา มหาวิทยาลัย A ที่ประเทศตุรกี ในช่วงการระบาดของโรคโควิด-19 พบว่า นักศึกษามีคะแนนความเครียดเฉลี่ยเท่ากับ 22.74 (SD: 6.26)
+\end{qbox}
+
+\begin{stepbox}{ขั้นที่ 1: กำหนดสมมติฐาน}
+$$H_0:\mu=22.74 \qquad H_1:\mu\ne22.74$$
+\concept{โจทย์ถามว่า ``แตกต่างไปจาก'' ค่าอ้างอิง 22.74 หรือไม่ -- คำว่า ``แตกต่าง'' ไม่ได้ระบุทิศทาง (ไม่ได้บอกว่ามากกว่าหรือน้อยกว่า) จึงต้องตั้งเป็นสมมติฐาน\textbf{สองทาง} ($\ne$) และเนื่องจากมีค่าคงที่อ้างอิงเพียงค่าเดียว ($\mu_0=22.74$) มาเปรียบเทียบกับค่าเฉลี่ยของกลุ่มตัวอย่างเพียง 1 กลุ่ม จึงเป็นการทดสอบค่าเฉลี่ยของ \textbf{1 ประชากร}}
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 2: กำหนดระดับนัยสำคัญ}
+กำหนดระดับนัยสำคัญที่ $\alpha=0.05$
+\concept{เป็นค่ามาตรฐานที่ใช้ทั่วไปในงานวิจัย ตามที่โจทย์กำหนดไว้}
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 3: พิจารณาเลือกตัวสถิติทดสอบ}
+ต้องทดสอบข้อตกลงเบื้องต้นก่อนว่าข้อมูลคะแนนความเครียดมีการแจกแจงแบบปกติหรือไม่ ($n=150>50$ จึงใช้ Kolmogorov--Smirnov)
+$$H_0:\text{ข้อมูลมีการแจกแจงแบบปกติ}\qquad H_1:\text{ข้อมูลไม่มีการแจกแจงแบบปกติ}$$
+
+\spssout{Tests of Normality}
+\begin{center}\scriptsize
+\begin{tabular}{@{}lccccc c@{}}
+\toprule
+& \multicolumn{3}{c}{Kolmogorov-Smirnov$^a$} & \multicolumn{3}{c}{Shapiro-Wilk}\\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+& Statistic & df & Sig. & Statistic & df & Sig.\\
+\midrule
+คะแนนความเครียด & .053 & 150 & .200* & .994 & 150 & .747\\
+\bottomrule
+\end{tabular}
+\end{center}
+{\scriptsize *This is a lower bound of the true significance. \quad a. Lilliefors Significance Correction}
+
+พบว่า p-value $=0.200>0.05\Rightarrow$ \textbf{ยอมรับ} $H_0$ นั่นคือ คะแนนความเครียดมีการแจกแจงปกติ ($p>0.05$)
+
+เนื่องจากไม่ทราบ $\sigma$ ของประชากร และ $n=150\ge30$ จึงเลือกใช้ตัวสถิติ
+$$Z=\frac{\bar X-\mu_0}{S/\sqrt n}$$
+\concept{เลือกสถิติทดสอบตามผังการตัดสินใจ 3 กรณี: (1) ทราบ $\sigma^2$ $\to$ ใช้ $Z$ เสมอ, (2) ไม่ทราบ $\sigma^2$ และ $n<30$ $\to$ ใช้ $T$, (3) ไม่ทราบ $\sigma^2$ และ $n\ge30$ $\to$ ใช้ $Z$ (ประมาณ $\sigma$ ด้วย $S$) โจทย์นี้ไม่ทราบค่าความแปรปรวนของประชากร และมีขนาดตัวอย่าง $n=150\ge30$ จึงตรงกับกรณีที่ 3. ในทางปฏิบัติ SPSS จะใช้ขั้นตอน One-Sample T Test เสมอ (รายงานเป็นค่า $t$) ซึ่งเมื่อ $n$ มากค่า $t$ จะใกล้เคียงกับ $Z$ มาก}
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 4: คำนวณค่าสถิติและหาค่า p-value}
+คำสั่งใน SPSS: \texttt{Analyze > Compare Means > One-Sample T Test...} กำหนด Test Value $=22.74$
+
+\spssout{One-Sample Statistics}
+\begin{center}\scriptsize
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+& N & Mean & Std. Deviation & Std. Error Mean\\
+\midrule
+คะแนนความเครียด & 150 & 20.88 & 7.126 & .582\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\spssout{One-Sample Test (Test Value = 22.74)}
+\begin{center}\scriptsize
+\begin{tabular}{@{}lccc ccc@{}}
+\toprule
+& & & & \multicolumn{1}{c}{Mean} & \multicolumn{2}{c}{95\% CI of the Difference}\\
+& $t$ & $df$ & Sig.(2-tailed) & Difference & Lower & Upper\\
+\midrule
+คะแนนความเครียด & -3.197 & 149 & .002 & -1.860 & -3.01 & -.71\\
+\bottomrule
+\end{tabular}
+\end{center}
+\concept{วิธีอ่านตาราง: $df=n-1=149$; ค่า Sig.(2-tailed) คือ p-value ที่ต้องนำไปเทียบกับ $\alpha$ โดยตรง เพราะโจทย์นี้ตั้งสมมติฐานแบบสองทางอยู่แล้ว (ไม่ต้องหารครึ่ง); Mean Difference $=\bar X-\mu_0=20.88-22.74=-1.860$ ตรงกับเครื่องหมายลบของค่า $t$}
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 5: ทำการตัดสินใจ และสรุปผลการทดสอบ}
+p-value $=0.002 < \alpha=0.05 \Rightarrow$ \textbf{ปฏิเสธ} $H_0$
+
+สรุป: คะแนนความเครียดเฉลี่ยของนักศึกษาในรัฐนิวเจอร์ซี่ \textbf{แตกต่าง}จากกลุ่มนักศึกษาในประเทศตุรกี ที่ระดับนัยสำคัญ 0.05
+\concept{เกณฑ์ปฏิเสธคือ p-value $\le\alpha$; เนื่องจาก 0.002 น้อยกว่า 0.05 มาก แสดงว่าโอกาสที่จะได้ผลต่างขนาดนี้ (หรือมากกว่า) โดยบังเอิญถ้า $H_0$ เป็นจริงนั้นต่ำมาก จึงมีหลักฐานเพียงพอที่จะปฏิเสธ $H_0$}
+\end{stepbox}
+
+\section{ตัวอย่างที่ 2: ผลต่างค่าเฉลี่ยของ 2 ประชากร กรณีตัวอย่างเป็นอิสระกัน ($\mu_1-\mu_2$)}
+
+\begin{qbox}
+อยากทราบว่า นักศึกษาชาย และ นักศึกษาหญิง มีคะแนนความเครียดเฉลี่ย แตกต่างกันหรือไม่??
+\end{qbox}
+
+\begin{stepbox}{ขั้นที่ 1: กำหนดสมมติฐาน}
+$$H_0:\mu_{\text{ชาย}}-\mu_{\text{หญิง}}=0 \qquad H_1:\mu_{\text{ชาย}}-\mu_{\text{หญิง}}\ne0$$
+\concept{โจทย์เปรียบเทียบคะแนนเฉลี่ยระหว่าง \textbf{2 กลุ่มที่เป็นคนละกลุ่มกัน} (ชาย vs หญิง ไม่ใช่วัดซ้ำจากคนกลุ่มเดียวกัน) จึงเป็นกรณี ``ตัวอย่างเป็นอิสระต่อกัน'' และคำว่า ``แตกต่างกัน'' ไม่ระบุทิศทาง จึงตั้งสมมติฐานสองทาง}
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 2: กำหนดระดับนัยสำคัญ}
+กำหนดระดับนัยสำคัญที่ $\alpha=0.05$
+\concept{ใช้ค่ามาตรฐานเดียวกันทุกการทดสอบในบทนี้ เพื่อให้เปรียบเทียบผลได้สอดคล้องกัน}
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 3: พิจารณาเลือกตัวสถิติทดสอบ}
+\textbf{(3.1) ทดสอบการแจกแจงปกติของแต่ละกลุ่ม} ($n_{\text{ชาย}}=106>50$ ใช้ K--S, $n_{\text{หญิง}}=44\le50$ ใช้ S--W)
+
+\spssout{Tests of Normality (แยกตามเพศ)}
+\begin{center}\scriptsize
+\begin{tabular}{@{}llcccccc@{}}
+\toprule
+& & \multicolumn{3}{c}{Kolmogorov-Smirnov$^a$} & \multicolumn{3}{c}{Shapiro-Wilk}\\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}
+& เพศ & Statistic & df & Sig. & Statistic & df & Sig.\\
+\midrule
+\multirow{2}{*}{คะแนนความเครียด} & ชาย & .074 & 106 & .195 & .989 & 106 & .512\\
+& หญิง & .103 & 44 & .200* & .986 & 44 & .877\\
+\bottomrule
+\end{tabular}
+\end{center}
+พบว่า p-value(ชาย)$=0.195>0.05$ และ p-value(หญิง)$=0.877>0.05\Rightarrow$ \textbf{ยอมรับ} $H_0$ ทั้งสองกลุ่ม นั่นคือ คะแนนความเครียดของทั้งนักศึกษาชายและหญิง มีการแจกแจงปกติ
+
+\textbf{(3.2) ทดสอบความแปรปรวนของสองกลุ่มด้วย Levene's Test} เพื่อเลือกว่าจะใช้สูตร $T$ pooled หรือ $T$ Welch
+$$H_0:\text{ประชากรทุกกลุ่มมีความแปรปรวนเท่ากัน}\qquad H_1:\text{ประชากรอย่างน้อย 1 กลุ่มมีความแปรปรวนต่างจากกลุ่มอื่น}$$
+\concept{ต้องทดสอบ Levene's Test ก่อนเสมอ เพราะสูตรตัวสถิติ $T$ สำหรับ 2 กลุ่มอิสระมี 2 แบบ ขึ้นกับว่าความแปรปรวนของสองประชากรเท่ากันหรือไม่ ($\sigma_1^2=\sigma_2^2$ หรือ $\sigma_1^2\ne\sigma_2^2$) ถ้า Sig. ของ Levene's $>\alpha$ แปลว่ายอมรับว่าความแปรปรวนเท่ากัน ให้ใช้แถว ``Equal variances assumed'' (สูตร pooled) แต่ถ้า Sig. $\le\alpha$ ให้ใช้แถว ``Equal variances not assumed'' (สูตร Welch)}
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 4: คำนวณค่าสถิติและหาค่า p-value}
+คำสั่งใน SPSS: \texttt{Analyze > Compare Means > Independent-Samples T Test...} เลือกตัวแปรเชิงปริมาณส่งไปที่ ``Test Variable(s)'' และตัวแปรเพศส่งไปที่ ``Grouping Variable''
+
+\spssout{Group Statistics}
+\begin{center}\scriptsize
+\begin{tabular}{@{}llcccc@{}}
+\toprule
+& เพศ & N & Mean & Std. Deviation & Std. Error Mean\\
+\midrule
+\multirow{2}{*}{คะแนนความเครียด} & ชาย & 106 & 21.87 & 6.991 & .679\\
+& หญิง & 44 & 18.50 & 6.957 & 1.049\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\spssout{Independent Samples Test}
+\begin{center}\tiny
+\begin{tabular}{@{}l cc ccc cc cc@{}}
+\toprule
+& \multicolumn{2}{c}{Levene's Test} & \multicolumn{7}{c}{t-test for Equality of Means}\\
+\cmidrule(lr){2-3}\cmidrule(lr){4-10}
+& F & Sig. & $t$ & $df$ & Sig.(2-t.) & Mean Diff. & SE Diff. & \multicolumn{2}{c}{95\% CI}\\
+& & & & & & & & Lower & Upper\\
+\midrule
+Equal variances assumed & .033 & .856 & 2.690 & 148 & .008 & 3.368 & 1.252 & .894 & 5.842\\
+Equal variances not assumed & & & 2.696 & 80.796 & .009 & 3.368 & 1.249 & .882 & 5.854\\
+\bottomrule
+\end{tabular}
+\end{center}
+\concept{อ่านตาราง Levene's ก่อน: Sig.$=.856>0.05\Rightarrow$ยอมรับว่าความแปรปรวนเท่ากัน จึงต้องอ่านผลจากแถวบน ``Equal variances assumed'' เท่านั้น ($t=2.690,\ df=148=n_1+n_2-2,\ \text{Sig.(2-tailed)}=.008$) แถวล่าง ``Equal variances not assumed'' (Welch) ใช้เฉพาะกรณี Levene's ปฏิเสธ $H_0$ เท่านั้น -- ในที่นี้ไม่ใช้}
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 5: ทำการตัดสินใจ และสรุปผลการทดสอบ}
+จากแถว Equal variances assumed: p-value $=0.008<\alpha=0.05\Rightarrow$ \textbf{ปฏิเสธ} $H_0$
+
+สรุป: นักศึกษาชาย มีคะแนนความเครียดเฉลี่ย\textbf{แตกต่าง}จากนักศึกษาหญิง ที่ระดับนัยสำคัญ 0.05 (ชายมีคะแนนเฉลี่ย 21.87 สูงกว่าหญิงที่ 18.50)
+\concept{เมื่อปฏิเสธ $H_0$ ในการทดสอบสองทาง ให้ดูค่าเฉลี่ยจากตาราง Group Statistics เพื่อบอกทิศทางของความแตกต่างประกอบการสรุปผลด้วยเสมอ (ไม่ใช่บอกแค่ ``แตกต่างกัน'' เฉย ๆ)}
+\end{stepbox}
+
+\section{ตัวอย่างที่ 3: ผลต่างค่าเฉลี่ยของ 2 ประชากร กรณีตัวอย่างมีความสัมพันธ์กัน ($\mu_D$)}
+
+\begin{qbox}
+ผู้วิจัยได้จัดโปรแกรมการบำบัดความเครียดโดยใช้ ``ดนตรีบำบัด'' กับการกำจัดความเครียด ให้นักศึกษากลุ่มตัวอย่าง อยากทราบว่า โปรแกรมการบำบัดความเครียดมีประสิทธิภาพในการลดความเครียดให้นักศึกษากลุ่มตัวอย่างหรือไม่?? ที่ระดับนัยสำคัญ 0.05
+\end{qbox}
+
+ให้ $D_i=X_{i1}-X_{i2}$, $i=1,2,\dots,n$ เป็นผลต่างของตัวอย่างสุ่มจากประชากรที่มีการแจกแจงแบบปกติ ที่มีค่าเฉลี่ย $\mu_D$ และความแปรปรวน $\sigma_D^2$ โดยที่ $\mu_D=\mu_1-\mu_2$ เป็นผลต่างของค่าเฉลี่ยข้อมูลที่ได้จากการวัดก่อนและหลังการทดลอง (ถ้า $D_0=0$ หมายความว่าก่อน-หลังไม่ต่างกัน, $D_0>0$ หมายความว่าก่อนทดลองค่าเฉลี่ยสูงกว่าหลังทดลอง, $D_0<0$ หมายความว่าก่อนทดลองค่าเฉลี่ยต่ำกว่าหลังทดลอง)
+
+\begin{stepbox}{ขั้นที่ 1: กำหนดสมมติฐาน}
+$$H_0:\mu_D=0 \qquad H_1:\mu_D<0$$
+\concept{ข้อมูลชุดนี้เป็นคะแนนความเครียด ``ก่อน-หลัง'' วัดจาก\textbf{นักศึกษากลุ่มเดียวกัน} (วัดซ้ำ) จึงเป็นกรณี ``ตัวอย่างมีความสัมพันธ์กัน'' ไม่ใช่กรณีอิสระ และเนื่องจากโจทย์คาดหวังทิศทางไว้ล่วงหน้าว่าโปรแกรมจะทำให้ความเครียด\textbf{ลดลง} (ไม่ใช่แค่ ``เปลี่ยนแปลง'' แบบไม่ระบุทิศทาง) จึงต้องตั้งสมมติฐานแบบ\textbf{ทางเดียว} ไม่ใช่สองทาง -- และเมื่ออ่านผลจากตาราง SPSS ในขั้นที่ 4 ต้องตรวจสอบเสมอว่าเครื่องหมายของผลต่างที่ได้ (ก่อน$-$หลัง) สอดคล้องกับทิศทางที่คาดหวังไว้จริงหรือไม่ ก่อนสรุปผล}
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 2: กำหนดระดับนัยสำคัญ}
+กำหนดระดับนัยสำคัญที่ $\alpha=0.05$
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 3: พิจารณาเลือกตัวสถิติทดสอบ}
+ทดสอบการแจกแจงปกติของคะแนนความเครียดก่อนและหลังโปรแกรม
+
+\spssout{Tests of Normality (ก่อน/หลัง)}
+\begin{center}\scriptsize
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+& \multicolumn{3}{c}{Kolmogorov-Smirnov$^a$} & \multicolumn{3}{c}{Shapiro-Wilk}\\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+& Statistic & df & Sig. & Statistic & df & Sig.\\
+\midrule
+คะแนนความเครียด (ก่อน) & .053 & 150 & .200* & .994 & 150 & .747\\
+คะแนนความเครียด\_หลัง & .056 & 150 & .200* & .992 & 150 & .601\\
+\bottomrule
+\end{tabular}
+\end{center}
+p-value ทั้งก่อนและหลัง $=0.200>\alpha=0.05\Rightarrow$ \textbf{ยอมรับ} $H_0$ นั่นคือ คะแนนความเครียดทั้งก่อนและหลังมีการแจกแจงปกติ
+
+เนื่องจาก $n=150\ge30$ จึงเลือกใช้ตัวสถิติ
+$$Z=\frac{\bar D-D_0}{S_D/\sqrt n}$$
+\concept{หลักการเลือกสถิติเหมือนกรณีค่าเฉลี่ย 1 ประชากร แต่ใช้กับ ``ผลต่าง'' $D_i$ แทนตัวแปรเดี่ยว: ถ้า $n<30$ ใช้ $T$ ($v=n-1$), ถ้า $n\ge30$ ใช้ $Z$; ในทางปฏิบัติ SPSS จะใช้ Paired-Samples T Test เสมอและรายงานเป็นค่า $t$}
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 4: คำนวณค่าสถิติและหาค่า p-value}
+คำสั่งใน SPSS: \texttt{Analyze > Compare Means > Paired-Samples T Test...} เลือกตัวแปรก่อนและหลังส่งไปที่ช่อง ``Paired Variables''
+
+\spssout{Paired Samples Statistics}
+\begin{center}\scriptsize
+\begin{tabular}{@{}llcccc@{}}
+\toprule
+& & Mean & N & Std. Deviation & Std. Error Mean\\
+\midrule
+\multirow{2}{*}{Pair 1} & คะแนนความเครียด (ก่อน) & 20.88 & 150 & 7.126 & .582\\
+& คะแนนความเครียด\_หลัง & 18.23 & 150 & 6.707 & .548\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\spssout{Paired Samples Test}
+\begin{center}\scriptsize
+\begin{tabular}{@{}l cccc c cc@{}}
+\toprule
+& \multicolumn{6}{c}{Paired Differences} & \\
+\cmidrule(lr){2-7}
+& Mean & SD & SE Mean & \multicolumn{2}{c}{95\% CI} & $t$ & $df$ / Sig.(2-t.)\\
+& & & & Lower & Upper & & \\
+\midrule
+ก่อน -- หลัง & 2.647 & 6.779 & .554 & 1.553 & 3.740 & 4.781 & $149$ / $.000$\\
+\bottomrule
+\end{tabular}
+\end{center}
+\concept{ตาราง SPSS ให้ Sig.(2-tailed)$=.000$ เสมอ แต่โจทย์นี้ตั้งสมมติฐาน\textbf{ทางเดียว} จึงต้อง\textbf{หารครึ่ง}ก่อนนำไปเทียบกับ $\alpha$: p-value ทางเดียว $=.000/2 < 0.0001$}
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 5: ทำการตัดสินใจ และสรุปผลการทดสอบ}
+p-value $<0.0001<\alpha=0.05\Rightarrow$ \textbf{ปฏิเสธ} $H_0$
+
+สรุป: โปรแกรมการบำบัดความเครียด (ดนตรีบำบัด) \textbf{มีประสิทธิภาพ}ในการลดความเครียดให้นักศึกษา ที่ระดับนัยสำคัญ 0.05 (คะแนนเฉลี่ยลดจาก 20.88 เหลือ 18.23)
+\concept{เพราะปฏิเสธ $H_0$ ในทิศทางที่ตั้งไว้ ($H_1:\mu_D<0$ กล่าวคือคะแนนหลังน้อยกว่าก่อนจริง) จึงสรุปได้ว่าโปรแกรมช่วยลดความเครียดได้จริงตามที่คาดหวัง ไม่ใช่แค่ ``แตกต่างกัน'' เฉย ๆ}
+\end{stepbox}
+
+\section{ตัวอย่างที่ 4: การทดสอบสมมติฐานของสัดส่วนของประชากร ($p$)}
+
+\begin{qbox}
+เกณฑ์ประเมินความเครียด ระบุว่า เมื่อคะแนนความเครียดมากกว่าหรือเท่ากับ 20 คะแนน จะถือว่ามีความเครียด อยากทราบว่า นักศึกษามีความเครียด เกินร้อยละ 50 หรือไม่?? ที่ระดับนัยสำคัญ 0.05
+\end{qbox}
+
+\begin{stepbox}{ขั้นที่ 1: กำหนดสมมติฐาน}
+$$H_0:p=0.5 \qquad H_1:p>0.5$$
+\concept{โจทย์ถามเกี่ยวกับ ``สัดส่วน'' (ร้อยละของคนที่มีความเครียด) ไม่ใช่ค่าเฉลี่ยของคะแนน จึงต้องทดสอบสัดส่วนของประชากร 1 กลุ่มเทียบกับค่าคงที่ $p_0=0.5$ (ร้อยละ 50) และคำว่า ``เกิน'' ระบุทิศทางชัดเจนว่ามากกว่า จึงตั้งสมมติฐาน\textbf{ทางเดียวด้านขวา}}
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 2: กำหนดระดับนัยสำคัญ}
+ระดับนัยสำคัญ ($\alpha$) $=0.05$
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 3: พิจารณาเลือกตัวสถิติทดสอบ}
+ตัวสถิติทดสอบสำหรับสัดส่วน 1 ประชากร คือ
+$$Z=\frac{\hat p-p_0}{\sqrt{p_0q_0/n}}, \qquad q_0=1-p_0$$
+เกณฑ์การตัดสินใจ: ปฏิเสธ $H_0$ ถ้า p-value $\le\alpha$
+\concept{ไม่ต้องทดสอบการแจกแจงปกติของข้อมูลแบบกรณีค่าเฉลี่ย เพราะตัวแปร ``มีความเครียดหรือไม่'' เป็นข้อมูลทวินาม (Binomial) ไม่ใช่ข้อมูลต่อเนื่อง สถิติทดสอบ $Z$ ใช้การประมาณด้วยการแจกแจงปกติ (Normal approximation) แทน ซึ่งใช้ได้ดีเมื่อ $n$ มากพอ ($n=150$ ในที่นี้)}
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 4: คำนวณค่าสถิติและหาค่า p-value}
+\textbf{(4.1) คำนวณด้วยมือ (ตัวอย่างสาธิตสูตร):} แทนค่า
+$$Z=\frac{0.593-0.5}{\sqrt{(0.593)(1-0.593)/150}}=2.32$$
+$$p\text{-value}=P(Z>2.32)=1-P(Z<2.32)=1-0.9898=0.0102$$
+
+\textbf{(4.2) คำนวณจริงด้วย SPSS} จากข้อมูลตัวอย่างทั้งหมด ($n=150$ คน มีผู้ที่ถูกประเมินว่ามีความเครียดจริง 101 คน): คำสั่ง \texttt{Analyze > Compare Means and Proportions > One-Sample Proportions...}
+
+\spssout{One-Sample Proportions Confidence Intervals}
+\begin{center}\scriptsize
+\begin{tabular}{@{}lcccc cc@{}}
+\toprule
+& Successes & Trials & Proportion & Asym. SE & \multicolumn{2}{c}{95\% CI}\\
+& & & & & Lower & Upper\\
+\midrule
+มีความเครียด (Wald) & 101 & 150 & .673 & .038 & .598 & .748\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\spssout{One-Sample Proportions Tests (Test Value = .5)}
+\begin{center}\scriptsize
+\begin{tabular}{@{}lccc cc cc@{}}
+\toprule
+& Successes & Trials & Proportion & Obs.--Test & Asym. SE & $Z$ & Sig.(One/Two-sided)\\
+\midrule
+มีความเครียด (Wald) & 101 & 150 & .673 & .173 & .038 & 4.526 & $<.001$ / $<.001$\\
+\bottomrule
+\end{tabular}
+\end{center}
+\concept{สังเกตว่าสัดส่วนตัวอย่างจริง $\hat p=101/150=.673$ (ไม่ใช่ .593 ในตัวอย่างสาธิตสูตรด้านบนซึ่งเป็นตัวเลขสมมติเพื่อฝึกแทนค่าสูตรเท่านั้น) เมื่อคำนวณกับข้อมูลจริงทั้งชุดผ่าน SPSS ได้ $Z=4.526$ และ Sig.(One-sided) $<.001$ ซึ่งเป็น p-value ที่ถูกต้องสำหรับการทดสอบทางเดียวนี้โดยตรง (ไม่ต้องหารครึ่งอีก เพราะ SPSS รายงานค่า One-Sided p ไว้ให้แล้ว)}
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 5: ทำการตัดสินใจ และสรุปผลการทดสอบ}
+p-value $<0.001<\alpha=0.05\Rightarrow$ \textbf{ปฏิเสธ} $H_0$
+
+สรุป: นักศึกษามีความเครียด \textbf{เกินร้อยละ 50} ($p<0.05$)
+\concept{เนื่องจากสัดส่วนตัวอย่างที่พบ (67.3\%) สูงกว่า 50\% มาก และ p-value เล็กกว่า $\alpha$ มาก จึงมีหลักฐานเพียงพอสรุปว่าสัดส่วนนักศึกษาที่มีความเครียดในประชากรเกินร้อยละ 50 จริง}
+\end{stepbox}
+
+\section{ตัวอย่างที่ 5: การทดสอบผลต่างสัดส่วนของ 2 ประชากร ($p_1-p_2$)}
+
+\begin{qbox}
+เกณฑ์การประเมินความเครียด ระบุว่า เมื่อคะแนนความเครียดมากกว่าหรือเท่ากับ 20 คะแนน จะถือว่ามีความเครียด อยากทราบว่า นักศึกษาชาย กับ นักศึกษาหญิง มีสัดส่วนความเครียด แตกต่างกันหรือไม่?? ที่ระดับนัยสำคัญ 0.05 กำหนดให้ $\hat p_1$ แทนสัดส่วนของนักศึกษาชายที่มีความเครียด และ $\hat p_2$ แทนสัดส่วนของนักศึกษาหญิงที่มีความเครียด ($x_1=74,\ n_1=106$ สำหรับชาย; $x_2=27,\ n_2=44$ สำหรับหญิง)
+\end{qbox}
+
+\begin{stepbox}{ขั้นที่ 1: กำหนดสมมติฐาน}
+$$H_0:p_1-p_2=0 \qquad H_1:p_1-p_2\ne0$$
+\concept{เปรียบเทียบ\textbf{สัดส่วน}ระหว่าง 2 กลุ่มที่เป็นอิสระต่อกัน (ชาย vs หญิง) ไม่ใช่เปรียบเทียบค่าเฉลี่ย และคำว่า ``แตกต่างกัน'' ไม่ระบุทิศทาง จึงตั้งสมมติฐานสองทาง}
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 2: กำหนดระดับนัยสำคัญ}
+ระดับนัยสำคัญ ($\alpha$) $=0.05$
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 3: พิจารณาเลือกตัวสถิติทดสอบ}
+$$\text{กรณี } c_0\ne0:\ Z=\frac{(\hat p_1-\hat p_2)-c_0}{\sqrt{\hat p_1\hat q_1/n_1+\hat p_2\hat q_2/n_2}} \qquad
+\text{กรณี } c_0=0:\ Z=\frac{(\hat p_1-\hat p_2)-c_0}{\sqrt{\hat p\hat q(1/n_1+1/n_2)}},\ \hat p=\frac{x_1+x_2}{n_1+n_2}$$
+\concept{เนื่องจากค่าคงที่ที่ทดสอบ $c_0=0$ (สมมติฐานหลักคือสัดส่วนเท่ากัน ไม่ใช่ต่างกันคงที่ค่าใดค่าหนึ่ง) จึงใช้สูตรกรณี $c_0=0$ ซึ่งต้องรวม (pool) ข้อมูลทั้งสองกลุ่มเป็น $\hat p$ ตัวเดียวก่อนคำนวณ standard error เพราะภายใต้ $H_0$ ถือว่าทั้งสองกลุ่มมีสัดส่วนประชากรเดียวกัน}
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 4: คำนวณค่าสถิติและหาค่า p-value}
+\textbf{(4.1) คำนวณด้วยมือ:}
+$$\hat p_1=\frac{74}{106}=0.698,\quad \hat p_2=\frac{27}{44}=0.614,\quad \hat p=\frac{74+27}{106+44}=0.673$$
+$$z=\frac{(0.698-0.614)-0}{\sqrt{(0.673)(1-0.673)\left(\frac1{106}+\frac1{44}\right)}}\approx1.00$$
+$$p\text{-value}=2\times P(Z>1)=2(1-0.8413)=0.3174$$
+
+\textbf{(4.2) คำนวณด้วย SPSS:} คำสั่ง \texttt{Analyze > Compare Means and Proportions > Independent-Sample Proportions...} ส่งตัวแปรความเครียดไปที่ ``Test Variable(s)'' และตัวแปรเพศไปที่ ``Grouping Variable(s)''
+
+\spssout{Independent-Samples Proportions Group Statistics}
+\begin{center}\scriptsize
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+เพศ & Successes & Trials & Proportion & Asym. SE\\
+\midrule
+ชาย & 74 & 106 & .698 & .045\\
+หญิง & 27 & 44 & .614 & .073\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\spssout{Independent-Samples Proportions Confidence Intervals \& Tests}
+\begin{center}\scriptsize
+\begin{tabular}{@{}lcc cc cc@{}}
+\toprule
+& Diff. in Prop. & Asym. SE & \multicolumn{2}{c}{95\% CI} & $Z$ & Sig.(One/Two-sided)\\
+& & & Lower & Upper & & \\
+\midrule
+มีความเครียด (Wald $H_0$) & .084 & .086 & -.084 & .253 & 1.004 & .158 / .315\\
+\bottomrule
+\end{tabular}
+\end{center}
+\concept{ผลจากการคำนวณด้วยมือ ($z\approx1.00$, p-value$=0.3174$) กับผลจาก SPSS ($Z=1.004$, Two-Sided Sig.$=.315$) ใกล้เคียงกันมาก (ต่างกันเล็กน้อยจากการปัดเศษระหว่างคำนวณด้วยมือ) นี่เป็นตัวอย่างที่ดีในการฝึกอ่านว่า Two-Sided p ในตาราง SPSS คือ p-value ที่ใช้เทียบกับ $\alpha$ โดยตรงสำหรับสมมติฐานสองทาง}
+\end{stepbox}
+
+\begin{stepbox}{ขั้นที่ 5: ทำการตัดสินใจ และสรุปผลการทดสอบ}
+p-value $=0.315>\alpha=0.05\Rightarrow$ \textbf{ยอมรับ} $H_0$
+
+สรุป: นักศึกษาชาย กับ นักศึกษาหญิง มีสัดส่วนความเครียด \textbf{ไม่แตกต่างกัน} ($p>0.05$)
+\concept{เมื่อ p-value มากกว่า $\alpha$ แปลว่าข้อมูลตัวอย่างไม่ได้ให้หลักฐานเพียงพอที่จะปฏิเสธ $H_0$ -- ซึ่ง\textbf{ไม่ได้แปลว่า $H_0$ เป็นจริงแน่นอน} เพียงแต่สรุปว่า ``ยอมรับ'' หรือ ``ไม่มีหลักฐานเพียงพอที่จะปฏิเสธ'' เท่านั้น สังเกตด้วยว่าช่วงความเชื่อมั่น 95\% ของผลต่างสัดส่วน ($-0.084$ ถึง $0.253$) ครอบคลุมค่า 0 อยู่ ซึ่งสอดคล้องกับการยอมรับ $H_0:p_1-p_2=0$}
+\end{stepbox}
+
+\section{สรุปการเลือกตัวสถิติทดสอบ}
+\begin{center}\small
+\begin{tabular}{@{}p{6.5cm}p{6.5cm}@{}}
+\toprule
+\textbf{สถานการณ์} & \textbf{ตัวสถิติทดสอบ}\\\midrule
+$\mu$ (1 ประชากร), ทราบ $\sigma$ & $Z$\\
+$\mu$ (1 ประชากร), ไม่ทราบ $\sigma$, $n<30$ & $T,\ v=n-1$\\
+$\mu$ (1 ประชากร), ไม่ทราบ $\sigma$, $n\ge30$ & $Z$ (ประมาณด้วย $S$)\\
+$\mu_1-\mu_2$ อิสระกัน, ทราบ $\sigma_1^2,\sigma_2^2$ & $Z$\\
+$\mu_1-\mu_2$ อิสระกัน, ไม่ทราบแต่ $\sigma_1^2=\sigma_2^2$ (Levene's Sig.$>\alpha$) & $T$ pooled, $v=n_1+n_2-2$\\
+$\mu_1-\mu_2$ อิสระกัน, ไม่ทราบแต่ $\sigma_1^2\ne\sigma_2^2$ (Levene's Sig.$\le\alpha$) & $T$ Welch\\
+$\mu_D$ (ตัวอย่างสัมพันธ์กัน/วัดซ้ำ), $n<30$ & $T,\ v=n-1$\\
+$\mu_D$ (ตัวอย่างสัมพันธ์กัน/วัดซ้ำ), $n\ge30$ & $Z$\\
+$p$ (สัดส่วน 1 ประชากร) & $Z$\\
+$p_1-p_2$ (ผลต่างสัดส่วน 2 ประชากร) & $Z$ (ใช้ $\hat p$ pooled เมื่อ $c_0=0$)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{formulabox}
+\textbf{หลักทั่วไปที่ใช้ซ้ำทุกครั้ง (5 ขั้นตอน):}
+\begin{enumerate}
+\item ตั้ง $H_0,H_1$ -- ดูว่าโจทย์ถามเรื่องค่าเฉลี่ยหรือสัดส่วน, 1 กลุ่มหรือ 2 กลุ่ม, อิสระหรือสัมพันธ์กัน, และมีทิศทาง (ทางเดียว) หรือไม่ (สองทาง)
+\item กำหนด $\alpha$ -- โดยทั่วไป 0.05
+\item เลือกสถิติทดสอบ -- ทดสอบข้อตกลงเบื้องต้น (ปกติภาพ/ความแปรปรวนเท่ากัน) ก่อนเลือกสูตร
+\item คำนวณค่าสถิติ/p-value -- อ่านจาก Output SPSS ให้ถูกตาราง ถูกแถว และหารครึ่งถ้าเป็นการทดสอบทางเดียว
+\item เทียบ p-value กับ $\alpha$ แล้วสรุปผลกลับไปที่คำถามของโจทย์ (บอกทิศทาง/ขนาดของความแตกต่างด้วยเสมอ)
+\end{enumerate}
+\end{formulabox}
+
+\end{document}
